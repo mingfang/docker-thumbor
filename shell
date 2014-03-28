@@ -1,0 +1,1 @@
+docker run -v `pwd`/etc/thumbor.conf:/etc/thumbor.conf -p 8888:8888 -i -t thumbor /bin/bash
