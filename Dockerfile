@@ -20,7 +20,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential python-dev
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y python-numpy python-opencv webp libpng-dev libtiff-dev libjasper-dev libjpeg-dev
 
 #Thumbor
-RUN pip install thumbor
+RUN pip install thumbor==4.1.0
 
 #OpenCV Engine
 RUN pip install opencv-engine
