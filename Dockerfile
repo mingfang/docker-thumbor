@@ -1,8 +1,6 @@
 FROM ubuntu
  
-RUN echo 'deb http://archive.ubuntu.com/ubuntu precise main universe' > /etc/apt/sources.list && \
-    echo 'deb http://archive.ubuntu.com/ubuntu precise-updates universe' >> /etc/apt/sources.list && \
-    apt-get update
+RUN apt-get update
 
 #Runit
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y runit 
@@ -20,7 +18,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential python-dev
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y python-numpy python-opencv webp libpng-dev libtiff-dev libjasper-dev libjpeg-dev
 
 #Thumbor
-RUN pip install thumbor==4.1.0
+RUN pip install thumbor==4.1.2
 
 #OpenCV Engine
 RUN pip install opencv-engine
