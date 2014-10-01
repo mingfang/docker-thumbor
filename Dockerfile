@@ -1,35 +1,34 @@
-FROM ubuntu
+FROM ubuntu:14.04
  
+ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update
 
 #Runit
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y runit 
+RUN apt-get install -y runit 
 CMD /usr/sbin/runsvdir-start
 
 #SSHD
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y openssh-server &&	mkdir -p /var/run/sshd && \
+RUN apt-get install -y openssh-server && \
+    mkdir -p /var/run/sshd && \
     echo 'root:root' |chpasswd
+RUN sed -i "s/session.*required.*pam_loginuid.so/#session    required     pam_loginuid.so/" /etc/pam.d/sshd
+RUN sed -i "s/PermitRootLogin without-password/#PermitRootLogin without-password/" /etc/ssh/sshd_config
 
 #Utilities
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y vim less net-tools inetutils-ping curl git telnet nmap socat dnsutils netcat tree htop unzip sudo
+RUN apt-get install -y vim less net-tools inetutils-ping curl git telnet nmap socat dnsutils netcat tree htop unzip sudo software-properties-common
 
 #Thumbor Requirements
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y build-essential python-dev python-pycurl python-pip
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y python-numpy python-opencv webp libpng-dev libtiff-dev libjasper-dev libjpeg-dev
+RUN apt-get install -y build-essential python-dev python-pycurl python-pip
+RUN apt-get install -y python-numpy python-opencv webp libpng-dev libtiff-dev libjasper-dev libjpeg-dev
 
 #Thumbor
-RUN pip install thumbor==4.1.2
+RUN pip install thumbor==4.4.1
 
 #OpenCV Engine
+RUN pip install colour
 RUN pip install opencv-engine
 
-#Configuration
-ADD . /docker
-RUN ln -s /docker/etc/thumbor.conf /etc/thumbor.conf
+#Add runit services
+ADD sv /etc/service 
 
-#Runit Automatically setup all services in the sv directory
-RUN for dir in /docker/sv/*; do echo $dir; chmod +x $dir/run $dir/log/run; ln -s $dir /etc/service/; done
-
-ENV HOME /root
-WORKDIR /root
-EXPOSE 22 8888
+ADD etc/thumbor.conf /etc/
