@@ -22,7 +22,7 @@ RUN apt-get install -y build-essential python-dev python-pycurl python-pip
 RUN apt-get install -y python-numpy python-opencv webp libpng-dev libtiff-dev libjasper-dev libjpeg-dev
 
 #Thumbor
-RUN pip install thumbor==4.4.1
+RUN pip install thumbor==4.6.0
 
 #OpenCV Engine
 RUN pip install colour
