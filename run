@@ -1,1 +1,4 @@
-docker run -v `pwd`/etc/thumbor.conf:/etc/thumbor.conf -p 8888:8888 -d -t thumbor
+#!/bin/bash
+source helper
+
+docker run -d -t ${IMAGE}
