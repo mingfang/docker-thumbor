@@ -1,0 +1,37 @@
+namespaces:
+  {{namespace}}:
+    configmaps:
+    - name: thumbor
+      data:
+        thumbor.conf: |
+          RESULT_STORAGE = 'thumbor.result_storages.file_storage'
+          DETECTORS = [
+              'thumbor.detectors.face_detector',
+              'thumbor.detectors.profile_detector',
+              'thumbor.detectors.glasses_detector',
+              'thumbor.detectors.feature_detector',
+          ]
+          RESULT_STORAGE_STORES_UNSAFE = True
+
+    services:
+    - name: thumbor-demo
+      ports:
+      - port: 8888
+      annotations:
+        com:
+        - http:
+          - server: thumbor.{{namespace}}.*
+            paths:
+            - path: /
+      pod:
+        containers:
+        - name: thumbor
+          image: registry.rebelsoft.com/thumbor
+          volumeMounts:
+          - name: config
+            subPath: thumbor.conf
+            mountPath: /etc/thumbor.conf
+        volumes:
+        - name: config
+          configMap:
+            name: thumbor
